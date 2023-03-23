@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 const BookItem = (props) => {
     function isImg(props) {
@@ -14,13 +15,10 @@ const BookItem = (props) => {
         }
         return <h3></h3>
       }
-      function clickedLog(e){
-        console.log(e.props.id);
-      }
-      
+      const router = useNavigate();
     return (
         <div className='b'>
-            <div id={props.props.id} className='book__card' onClick={() => clickedLog(props)}>
+            <div id={props.props.id} className='book__card' onClick={() => router(`/book/${props.props.id}`)}>
                 <div className="book__container">
                     {isImg(props)}
                     <div className='book__info'>

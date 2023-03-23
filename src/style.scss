@@ -181,23 +181,47 @@
     cursor: pointer;
 }
 
+.Books{
+    width: 800px;
+    margin-top: 121px;
+}
+
 
 @media (max-width: 450px) {
-    body #root .App .selectes .select__container select{
+    body #root .Books .selectes .select__container select{
             background-color: antiquewhite;
             width: 100px;
             height: 30px;
     }
-    body #root .App .search__form .search__input{
+    body #root .Books .search__form .search__input{
             width: 80px;
     }
-    body #root .App .search__form .search__input button{
+    body #root .Books .search__form .search__input button{
             width: 80px;
     }
-    body #root .App .books__container {
+    body #root .Books .books__container {
         display: flex;
         flex-direction: row;
         justify-content:center;
         align-items: center;
+    }
+}
+.book{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    background-color: antiquewhite;
+    height: auto;
+    flex-wrap: wrap;
+    text-align: center;
+    padding: 20px;
+    h3{
+        font-size: 14px;
+    }
+    img{
+        width: 50%;
     }
 }
