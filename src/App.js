@@ -8,50 +8,106 @@ import NewSelect from "./components/UI/NewSelect";
 function App() {
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [loadState, setLoadState] = useState(false);
+  const [loadMore, setLoadMore] = useState(0);
   const [Books, setBooks] = useState([]);
+  const [SortedBooks, setSortedBooks] = useState([]);
+  const [SortedBooksNew, setSortedBooksNew] = useState([]);
+  const [SortedBooksRel, setSortedBooksRel] = useState([]);
   const [BooksCount, setBooksCount] = useState([]);
   const [selectedSort, setSelectedSort] = useState('');
   const [isLoading, setIsLoading] = useState(false);  
 
   const ApiKey = 'AIzaSyAt_T_lVNigxmWSUd5DbsKWjBB44d7etnU';
   let counter = 0;
-
-  async function fetchBooks(name){
+  let name = '';
+  
+  async function fetchBooks(name, counter){
     setIsLoading(true);
-    const response = await axios.get('https://www.googleapis.com/books/v1/volumes?q=intitle:' + name + '&maxResults=30&key=' + ApiKey+ '&startIndex='+ counter);
-    setBooksCount(response.data.totalItems);
-    console.log(response.data.items)
-    if(response.data.items == undefined){
-      setIsLoading(false);
-    }else{
-      setBooks(response.data.items);
-      setIsLoading(false);
-    }
+        const response = await axios.get('https://www.googleapis.com/books/v1/volumes?q=intitle:' + name + '&maxResults=30&key=' + ApiKey+ '&startIndex='+ counter);
+        setBooksCount(response.data.totalItems);
+        console.log(response.data.items)
+        if(response.data.items == undefined){
+          setIsLoading(false);
+          setLoadState(false);
+        }else{
+            console.log('loadmore: ' + counter);          
+            setBooks([...Books, ...response.data.items]);
+            setIsLoading(false);
+            setLoadState(true);
+        }
   }
 
   function loadMoreBooks(){
-    console.log(counter);
-    //counter = counter+30;
-    console.log(counter);
+    if (loadState != false){
+          console.log(loadMore);
+          counter = loadMore + 31;
+          console.log(counter);
+          setLoadMore(counter);
+          console.log(loadMore + ' update!');
+          fetchBooks(searchQuery, counter);
+    }else{
+      console.log('error')
+    }
   }
 
   function handleSubmit(event) {
     event.preventDefault();
-    const name = searchQuery;
-    fetchBooks(name);
+    name = searchQuery;
+    fetchBooks(name, counter);
+    return;
   }
 
-  useEffect( () => {
-    //fetchBooks();
-  }, []);
 
   const sortBooks = (sort) => {
     setSelectedSort(sort)
     console.log(sort);
-    if(Books.categories == sort){
-      console.log('yes');
+    if (sort == 'All'){
+      sort = '';
+      setSortedBooks(Books);
+    }else{
+      sort = sort;
+      for (let index = 0; index < Books.length; index++) {
+        console.log(Books[index].volumeInfo.categories);
+        if(Books[index].volumeInfo.categories == sort){
+          SortedBooks.push(Books[index]);
+          setSortedBooksNew(SortedBooks);
+        }
+      }
     }
+}
+const isSortedBooks = (SortedBooks, SortedBooksNew) => {
+  console.log('alo');
+  if (  SortedBooks == SortedBooksNew){
+    console.log(SortedBooks);
+    SortedBooks = [''];
+    console.log(SortedBooks);
+    const a = <BookList props={SortedBooksNew}/>
+    SortedBooksNew=[''];
+    console.log(SortedBooksNew);
+    return a;
+  }else{
+    console.log('nipon');
   }
+  console.log(SortedBooks);
+}
+
+const sortBooksRelevance = (sort) => {
+  setSelectedSort(sort)
+  console.log(sort);
+  if (sort == 'Relevance'){
+    setSortedBooks(Books);
+  }else{
+    
+    const a = Books.sort((a, b) => (a.publishedDate > b.publishedDate) ? 1 : -1);
+    setSortedBooksRel(a);
+    console.log(SortedBooksRel);
+    }
+}
+
+
+
+
   
   return (
     <div className="App">
@@ -73,13 +129,13 @@ function App() {
             onChange = {sortBooks}
             defaulutValue="Categories"
             options={[
-              {value: 'all', name: 'all'},
-              {value: 'art', name: 'art'},
-              {value: 'biography', name: 'biography'},
-              {value: 'computers', name: 'computers'},
-              {value: 'history', name: 'history'},
-              {value: 'medical', name: 'medical'},
-              {value: 'poetry', name: 'poetry'},
+              {value: 'All', name: 'All'},
+              {value: 'Art', name: 'Art'},
+              {value: 'Biography', name: 'Biography'},
+              {value: 'Computers', name: 'Computers'},
+              {value: 'History', name: 'History'},
+              {value: 'Medical', name: 'Medical'},
+              {value: 'Poetry', name: 'Poetry'},
             ]}
           />
         </div>
@@ -90,7 +146,7 @@ function App() {
         <div className="select__container">
         <NewSelect
             value={selectedSort}
-            onChange = {sortBooks}
+            onChange = {sortBooksRelevance}
             defaulutValue="Sort by"
             options={[
               {value: 'relevance', name: 'relevance'},
@@ -99,12 +155,15 @@ function App() {
           />
         </div>
       </div>
-      {isLoading
+      {
+      isLoading
         ? <div className="loader__container"><div className="loader"></div></div>
-        : <BookList props={Books}/>
+        : SortedBooks != 0
+          ? isSortedBooks(SortedBooks, SortedBooksNew)
+          : <BookList props={Books}/>
       }
       <center>
-      <button className="loadMore disp__none" onClick={loadMoreBooks}>Load more</button>
+      <button className="loadMore" onClick={loadMoreBooks}>Load more</button>
       </center>
     </div>
   );

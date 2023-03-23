@@ -180,3 +180,24 @@
     text-transform: uppercase;
     cursor: pointer;
 }
+
+
+@media (max-width: 450px) {
+    body #root .App .selectes .select__container select{
+            background-color: antiquewhite;
+            width: 100px;
+            height: 30px;
+    }
+    body #root .App .search__form .search__input{
+            width: 80px;
+    }
+    body #root .App .search__form .search__input button{
+            width: 80px;
+    }
+    body #root .App .books__container {
+        display: flex;
+        flex-direction: row;
+        justify-content:center;
+        align-items: center;
+    }
+}
