@@ -72,6 +72,8 @@ function Books() {
         if(Books[index].volumeInfo.categories == sort){
           SortedBooks.push(Books[index]);
           setSortedBooksNew(SortedBooks);
+        }else{
+          console.log('результатов нет');
         }
       }
     }

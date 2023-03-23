@@ -28,7 +28,8 @@
     flex-direction: column;
     justify-content: flex-start;
     margin: 15px;
-    height: 400px;
+    height: 560px;
+    overflow: hidden;
     cursor: pointer;
     .book__container{
         display: flex;
@@ -182,7 +183,7 @@
 }
 
 .Books{
-    width: 800px;
+    width: 86%;
     margin-top: 121px;
 }
 
@@ -222,6 +223,7 @@
         font-size: 14px;
     }
     img{
-        width: 50%;
+        width: 30%;
+        margin: 20px;
     }
 }

@@ -11,7 +11,13 @@ const BookItem = (props) => {
 
       function isAuthors(props) {
         if (props.props.volumeInfo.authors) {
-          return <h3>{props.props.volumeInfo.authors[0]}</h3>
+          return <h3>{props.props.volumeInfo.authors}</h3>
+        }
+        return <h3></h3>
+      }      
+      function isCategories(props) {
+        if (props.props.volumeInfo.categories) {
+          return <h3>{props.props.volumeInfo.categories[0]}</h3>
         }
         return <h3></h3>
       }
@@ -24,7 +30,7 @@ const BookItem = (props) => {
                     <div className='book__info'>
                         <h1>{props.props.volumeInfo.title}</h1>
                         {isAuthors(props)}
-                        <p>{props.props.volumeInfo.categories}</p>
+                        {isCategories(props)}
                     </div>
                 </div>
             </div>
